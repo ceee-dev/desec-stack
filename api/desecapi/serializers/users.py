@@ -83,6 +83,10 @@ class RegisterAccountSerializer(UserSerializer):
                 serializer.default_error_messages["name_unavailable"],
                 code="name_unavailable",
             )
+        if DomainSerializer.Meta.model(name=value).is_locally_registrable:
+            raise serializers.ValidationError(
+                "Registration during sign-up disabled; please create account without a domain name.",
+            )
         return value
 
     def create(self, validated_data):
